@@ -9,7 +9,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       routes: getApplicationsRoutes(),
-      initialRoute: 'welcome',
+      initialRoute: 'home',
       title: 'Movies App',
     );
   }
