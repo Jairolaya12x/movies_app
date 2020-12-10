@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:movies_app/src/Widgets/Home/banner_movie_container.dart';
+import 'package:movies_app/src/Widgets/Home/poster_movier_container.dart';
 import 'package:movies_app/src/models/movie.dart';
 import 'package:movies_app/src/providers/movies_provider.dart';
 
@@ -64,7 +65,8 @@ class HomePage extends StatelessWidget {
           ),
           FutureBuilder(
             future: moviesProvider.getComingMovies(),
-            builder: (BuildContext context, AsyncSnapshot<List<Movie>> snapshot) {
+            builder:
+                (BuildContext context, AsyncSnapshot<List<Movie>> snapshot) {
               print(snapshot.connectionState);
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Container(
@@ -72,21 +74,19 @@ class HomePage extends StatelessWidget {
                   width: 50,
                   child: CircularProgressIndicator(),
                 );
-              } else
-                {
-                  print(snapshot.data.length);
-                  return Container(
-                    height: 200,
-                    child: ListView(
-                      scrollDirection: Axis.horizontal,
-                      children: List.generate(
-                        snapshot.data.length,
-                            (index) => BannerMovieContainer(snapshot.data[index]),
-                      ),
+              } else {
+                print(snapshot.data.length);
+                return Container(
+                  height: 200,
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: List.generate(
+                      snapshot.data.length,
+                      (index) => BannerMovieContainer(snapshot.data[index]),
                     ),
-                  );
-                }
-
+                  ),
+                );
+              }
             },
           )
         ],
@@ -114,8 +114,26 @@ class HomePage extends StatelessWidget {
           SizedBox(
             height: 10,
           ),
-          Placeholder(
-            fallbackHeight: 200,
+          FutureBuilder(
+            future: moviesProvider.getNowPlayingMovies(),
+            builder: (BuildContext _, AsyncSnapshot<List<Movie>> snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Container(
+                  height: 50,
+                  width: 50,
+                  child: CircularProgressIndicator(),
+                );
+              } else {
+                return Container(
+                  height: 300,
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: List.generate(snapshot.data.length,
+                        (index) => PosterMovieContainer(snapshot.data[index])),
+                  ),
+                );
+              }
+            },
           ),
         ],
       ),
