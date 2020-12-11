@@ -1,9 +1,12 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:movies_app/src/providers/data_preferences.dart';
 
 class WelcomePage extends StatelessWidget {
-  const WelcomePage({Key key}) : super(key: key);
+  WelcomePage({Key key}) : super(key: key);
+
+  final _usernameController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -11,7 +14,7 @@ class WelcomePage extends StatelessWidget {
       children: [
         _background(),
         Scaffold(
-          body: _content(),
+          body: _content(context),
           backgroundColor: Colors.transparent,
         ),
       ],
@@ -40,7 +43,7 @@ class WelcomePage extends StatelessWidget {
     );
   }
 
-  Widget _content() {
+  Widget _content(BuildContext context) {
     return Center(
       child: SingleChildScrollView(
         child: Column(
@@ -64,17 +67,17 @@ class WelcomePage extends StatelessWidget {
             SizedBox(
               height: 50,
             ),
-            _formLogin(),
+            _formLogin(context),
           ],
         ),
       ),
     );
   }
 
-  Widget _formLogin() {
+  Widget _formLogin(BuildContext context) {
     return Column(
       children: [
-        _inputField('Username'),
+        _inputField('Username', controller: _usernameController),
         _inputField('Password', obscureText: true),
         FlatButton(
           color: Colors.white,
@@ -83,14 +86,17 @@ class WelcomePage extends StatelessWidget {
               10,
             ),
           ),
-          onPressed: () {},
+          onPressed: () {
+            DataPreferences().currentUserName = _usernameController.value.text;
+            Navigator.pushNamed(context, 'home');
+          },
           child: Text('Ingresar'),
         ),
       ],
     );
   }
 
-  Widget _inputField(String title, {bool obscureText = false}) {
+  Widget _inputField(String title, {bool obscureText = false, TextEditingController controller}) {
     return Container(
       margin: EdgeInsets.symmetric(
         horizontal: 20,
@@ -107,6 +113,7 @@ class WelcomePage extends StatelessWidget {
             )
           ]),
       child: TextField(
+        controller: controller,
         cursorColor: Colors.black,
         obscureText: obscureText,
         decoration: InputDecoration(

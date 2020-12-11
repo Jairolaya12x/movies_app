@@ -13,9 +13,14 @@ class MoviesProvider {
 
   Future<List<Movie>> getNowPlayingMovies() async => await getMovies('/3/movie/now_playing');
 
-  Future<List<Movie>> getMovies(String endpoint) async {
+  Future<List<Movie>> searchMovies(String query) async => await getMovies('3/search/movie/',query: query);
+
+  Future<List<Movie>> getMovies(String endpoint, {String query}) async {
+    final queryParams =  {'api_key': API_KEY};
+    if(query != null) queryParams['query'] = query;
     http.Response response;
-    Uri endpointUrl = Uri.https(API_URL, endpoint, {'api_key': API_KEY});
+    Uri endpointUrl = Uri.https(API_URL, endpoint,queryParams);
+    print(endpointUrl.toString());
     response = await http.get(endpointUrl).catchError((onError) => throw onError);
     final decodeJson = json.decode(response.body);
     return List<Movie>.from(decodeJson['results'].map((m) => Movie.fromJson(m)));

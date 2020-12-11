@@ -1,7 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:movies_app/src/Widgets/Home/banner_movie_container.dart';
 import 'package:movies_app/src/Widgets/Home/poster_movier_container.dart';
 import 'package:movies_app/src/models/movie.dart';
+import 'package:movies_app/src/providers/data_preferences.dart';
+import 'package:movies_app/src/providers/data_search_delegate.dart';
 import 'package:movies_app/src/providers/movies_provider.dart';
 
 class HomePage extends StatelessWidget {
@@ -12,12 +15,12 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _appbar(),
-      body: _content(),
+      appBar: _appbar(context),
+      body: _content(context),
     );
   }
 
-  Widget _appbar() {
+  Widget _appbar(BuildContext context) {
     return AppBar(
       backgroundColor: Colors.white,
       title: Text(
@@ -27,16 +30,94 @@ class HomePage extends StatelessWidget {
           color: Colors.black,
         ),
       ),
+      actions: [
+        IconButton(
+          icon: Icon(
+            Icons.search,
+            color: Colors.black,
+          ),
+          onPressed: () => showSearch(context: context, delegate: DataSearch()),
+        ),
+      ],
       centerTitle: true,
     );
   }
 
-  Widget _content() {
+  Widget _content(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
         children: [
+          _userPanel(context),
           _comingSoonContainer(),
           _currentMoviesContainer(),
+        ],
+      ),
+    );
+  }
+
+  Widget _userPanel(BuildContext context) {
+    final circleSize = 40.0;
+    return Container(
+      margin: EdgeInsets.symmetric(
+        horizontal: 10,
+        vertical: 10,
+      ),
+      child: Row(
+        children: [
+          Container(
+            height: circleSize,
+            width: circleSize,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: RadialGradient(
+                colors: [
+                  Colors.deepOrangeAccent,
+                  Colors.orangeAccent,
+                ],
+              ),
+            ),
+            child: Center(
+              child: Text(
+                DataPreferences().currentUsername.substring(0,2).toUpperCase(),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Hello!',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),
+              ),
+              Text(
+                '${"\t" * 4} ${DataPreferences().currentUsername}',
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+          Expanded(
+            child: Container(),
+          ),
+          IconButton(
+            icon: Icon(Icons.exit_to_app_outlined),
+            onPressed: () {
+              DataPreferences().cleanDataPreferences();
+              Navigator.pushNamedAndRemoveUntil(context, 'welcome', (route) => false);
+            },
+          ),
         ],
       ),
     );
