@@ -5,6 +5,7 @@ class Movie {
   int id;
   String postUrl;
   double voteAverage;
+  String language;
 
   Movie({this.id,this.title,this.releaseDate, this.imageUrl});
 
@@ -16,6 +17,7 @@ class Movie {
       this.id = json['id'];
       this.postUrl = json['poster_path'];
       this.voteAverage = json['vote_average'] / 1;
+      this.language = json['original_language'];
     } on Exception catch (e) {
       print(e);
     }

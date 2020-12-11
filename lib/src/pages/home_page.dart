@@ -124,7 +124,6 @@ class HomePage extends StatelessWidget {
   }
 
   Widget _comingSoonContainer() {
-    print('Algo¡');
     return Container(
       margin: EdgeInsets.symmetric(
         vertical: 10,

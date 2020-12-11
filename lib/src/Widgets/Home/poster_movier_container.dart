@@ -21,11 +21,10 @@ class PosterMovieContainer extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
               image: DecorationImage(
-                image: NetworkImage(
-                  MoviesProvider().imageUrl(movie.postUrl),
-                ),
-               fit: BoxFit.cover
-              ),
+                  image: NetworkImage(
+                    MoviesProvider().imageUrl(movie.postUrl),
+                  ),
+                  fit: BoxFit.cover),
             ),
             width: 180,
           ),
@@ -36,7 +35,19 @@ class PosterMovieContainer extends StatelessWidget {
               fontSize: 18,
             ),
           ),
-          Text('Algun titulo'),
+          Row(
+            children: [
+              Icon(
+                Icons.language,
+                size: 17,
+              ),
+              Text('${movie.language.toUpperCase()} • '),
+              Icon(Icons.star_half),
+              Text(
+                movie.voteAverage.toStringAsFixed(1),
+              ),
+            ],
+          ),
         ],
       ),
     );
